@@ -53,7 +53,7 @@ RUN apt-get update && \
     chmod +x /usr/local/bin/kubectl \
     && \
     # --- INSTALACIÓN DE FASTDEPLOY ---
-    wget "https://github.com/jairoprogramador/fastdeploy-core/releases/download/v${FASTDEPLOY_VERSION}/fastdeploy-core_${FASTDEPLOY_VERSION}_linux_amd64.tar.gz" -O /tmp/fastdeploy.tar.gz && \
+    wget "https://github.com/jairoprogramador/fastdeploy-core/releases/download/v${FASTDEPLOY_VERSION}/fastdeploy-core_linux_amd64.tar.gz" -O /tmp/fastdeploy.tar.gz && \
     tar -xzf "/tmp/fastdeploy.tar.gz" -C /tmp && \
     mv /tmp/fd /usr/local/bin/ && \
     chmod 755 /usr/local/bin/fd && \
