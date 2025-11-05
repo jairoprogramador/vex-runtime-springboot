@@ -5,6 +5,9 @@ on:
     tags:
       - 'v*.*.*'
 
+permissions:
+  contents: read
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -21,38 +24,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Extract version and metadata
-        id: vars
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
-          echo "GIT_SHA=${GITHUB_SHA}" >> $GITHUB_ENV
-          echo "GIT_REPO=${GITHUB_REPOSITORY}" >> $GITHUB_ENV
-
-      - name: Configure Docker cache
-        uses: actions/cache@v4
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
       - name: Extract metadata (tags, labels)
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: jairoprogramador/fdrunjava17azure
           tags: |
-            type=raw,value=${{ env.VERSION }}
+            type=semver,pattern={{version}}
             type=raw,value=latest
             type=sha
           labels: |
             org.opencontainers.image.title=fdrunjava17azure
             org.opencontainers.image.description=Runtime Java 17 optimizado para Azure
-            org.opencontainers.image.source=${{ env.GIT_REPO }}
-            org.opencontainers.image.revision=${{ env.GIT_SHA }}
-            org.opencontainers.image.created=${{ env.BUILD_DATE }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -62,11 +45,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
-          
-      - name: Move new cache
-        if: always()
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
