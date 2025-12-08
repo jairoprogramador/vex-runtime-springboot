@@ -4,7 +4,7 @@ ARG MAVEN_VERSION="3.9.11"
 ARG TERRAFORM_VERSION="1.13.3"
 ARG KUBECTL_VERSION="1.34.1"
 ARG KUBELOGIN_VERSION="0.2.12"
-ARG FASTDEPLOY_VERSION="1.0.6"
+ARG FASTDEPLOY_VERSION="1.0.7"
 ARG DOCKER_VERSION="28.5.1"
 ARG DEV_GID=1001
 
@@ -50,18 +50,18 @@ RUN apt-get update && \
     rm -rf /tmp/kubelogin.zip /tmp/bin && \
     # --- INSTALACIÓN DE KUBECTL ---
     wget "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -O /usr/local/bin/kubectl && \
-    chmod +x /usr/local/bin/kubectl \
-    && \
-    # --- INSTALACIÓN DE FASTDEPLOY ---
+    chmod +x /usr/local/bin/kubectl && \
+    # --- LIMPIEZA ---
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get install -y && \
+    # --- INSTALACIÓN DE FASTDEPLOY CORE ---
     wget "https://github.com/jairoprogramador/fastdeploy-core/releases/download/v${FASTDEPLOY_VERSION}/fastdeploy-core_linux_amd64.tar.gz" -O /tmp/fastdeploy.tar.gz && \
     tar -xzf "/tmp/fastdeploy.tar.gz" -C /tmp && \
     mv /tmp/fd /usr/local/bin/ && \
     chmod 755 /usr/local/bin/fd && \
-    rm /tmp/fastdeploy.tar.gz \
-    && \
-    # --- LIMPIEZA ---
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm /tmp/fastdeploy.tar.gz
 
 USER fastdeploy
 
