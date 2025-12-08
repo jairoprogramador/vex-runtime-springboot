@@ -4,12 +4,11 @@ ARG MAVEN_VERSION="3.9.11"
 ARG TERRAFORM_VERSION="1.13.3"
 ARG KUBECTL_VERSION="1.34.1"
 ARG KUBELOGIN_VERSION="0.2.12"
-ARG FASTDEPLOY_VERSION="1.0.7"
+ARG FASTDEPLOY_VERSION="1.0.8"
 ARG DOCKER_VERSION="28.5.1"
 ARG DEV_GID=1001
 
 ENV DEBIAN_FRONTEND=noninteractive \
-    JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 \
     MAVEN_HOME=/usr/share/maven \
     PATH="/usr/share/maven/bin:$PATH"
 
@@ -27,6 +26,9 @@ RUN apt-get update && \
     # Java (OpenJDK 17)
     openjdk-17-jdk \
     && \
+    # Detectar JAVA_HOME y crear symlink estándar
+    JAVA_HOME_REAL=$(dirname $(dirname $(readlink -f $(which java)))) && \
+    ln -sfn "$JAVA_HOME_REAL" /usr/lib/jvm/java-17-openjdk && \
     # --- INSTALACIÓN DE MAVEN ---
     wget "https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz" -O /tmp/maven.tar.gz && \
     tar -xzf "/tmp/maven.tar.gz" -C /usr/share/ && \
@@ -62,6 +64,10 @@ RUN apt-get install -y && \
     mv /tmp/fd /usr/local/bin/ && \
     chmod 755 /usr/local/bin/fd && \
     rm /tmp/fastdeploy.tar.gz
+
+# Configurar JAVA_HOME usando el symlink estándar
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk
+ENV PATH="$JAVA_HOME/bin:$PATH"
 
 USER fastdeploy
 
