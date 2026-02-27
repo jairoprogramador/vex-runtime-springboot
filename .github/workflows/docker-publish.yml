@@ -28,14 +28,14 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: jairoprogramador/fdrunjava17azure
+          images: jairoprogramador/vex-runtime-springboot	
           tags: |
             type=semver,pattern={{version}}
             type=raw,value=latest
             type=sha
           labels: |
-            org.opencontainers.image.title=fdrunjava17azure
-            org.opencontainers.image.description=Runtime Java 17 optimizado para Azure
+            org.opencontainers.image.title=vex-runtime-springboot	
+            org.opencontainers.image.description=Runtime Vex for Spring Boot
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
