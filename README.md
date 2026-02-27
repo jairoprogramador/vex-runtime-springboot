@@ -17,19 +17,19 @@ Imagen Docker que [vex](https://github.com/jairoprogramador/vex-client) utiliza 
 ### Construir la imagen
 
 ```bash
-docker build -t vex-runtime-springboot .
+docker build -t vex-runtime-springboot-azure .
 ```
 
 En Linux, para evitar problemas de permisos con volúmenes montados:
 
 ```bash
-docker build --build-arg DEV_UID=$(id -u) --build-arg DEV_GID=$(id -g) -t vex-runtime-springboot .
+docker build --build-arg DEV_UID=$(id -u) --build-arg DEV_GID=$(id -g) -t vex-runtime-springboot-azure .
 ```
 
 ### Ejecutar un contenedor
 
 ```bash
-docker run --rm -it -v "$(pwd):/home/vex/app" vex-runtime-springboot <comando>
+docker run --rm -it -v "$(pwd):/home/vex/app" vex-runtime-springboot-azure <comando>
 ```
 
 Reemplaza `<comando>` con cualquier comando de [vex core](https://github.com/jairoprogramador/vex) (por ejemplo `test`, `deploy`). Sin argumentos, muestra la versión. 
