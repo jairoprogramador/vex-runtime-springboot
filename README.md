@@ -1,4 +1,4 @@
-# Runtime Spring Boot
+# Runtime Spring Boot Azure
 
 Imagen Docker que [vex](https://github.com/jairoprogramador/vex-client) utiliza como runtime para construir y desplegar proyectos Spring Boot generados a partir de sus plantillas.
 
