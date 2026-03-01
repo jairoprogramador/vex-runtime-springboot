@@ -88,6 +88,11 @@ ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-${TARGETARCH}
 ENV MAVEN_HOME=/usr/share/maven
 ENV PATH="$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH"
 
+RUN mkdir -p /home/vex/.m2 \
+    && mkdir -p /home/vex/.vex \
+    && mkdir -p /home/vex/app \
+    && chown -R vex:vex /home/vex
+    
 USER vex
 
 RUN git config --global --add safe.directory '*'
